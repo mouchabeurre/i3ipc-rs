@@ -158,6 +158,17 @@ pub enum NodeLayout {
     Unknown,
 }
 
+#[cfg(feature = "i3-gaps")]
+#[derive(Debug, Clone, Copy)]
+pub struct NodeGaps {
+    pub inner: i32,
+    pub outer: i32,
+    pub top: i32,
+    pub right: i32,
+    pub bottom: i32,
+    pub left: i32,
+}
+
 /// The reply to the `get_tree` request.
 #[derive(Debug, Clone)]
 pub struct Node {
@@ -225,6 +236,10 @@ pub struct Node {
     /// The original geometry the window specified when i3 mapped it. Used when switching a
     /// window to floating mode, for example.
     pub geometry: (i32, i32, i32, i32),
+
+    #[cfg(feature = "i3-gaps")]
+    /// The (inner, outer, top, right, bottom, left) gaps values.
+    pub gaps: Option<NodeGaps>,
 
     /// The X11 window ID of the actual client window inside this container. This field is set
     /// to null for split containers or otherwise empty containers. This ID corresponds to what

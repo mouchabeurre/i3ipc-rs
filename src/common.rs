@@ -84,6 +84,8 @@ pub fn build_tree(val: &json::Value) -> reply::Node {
         window_rect: build_rect(val.get("window_rect").unwrap()),
         deco_rect: build_rect(val.get("deco_rect").unwrap()),
         geometry: build_rect(val.get("geometry").unwrap()),
+        #[cfg(feature = "i3-gaps")]
+        gaps: build_gaps(val.get("gaps")),
         window: match val.get("window").unwrap().clone() {
             json::Value::Number(i) => Some(i.as_i64().unwrap() as i32),
             json::Value::Null => None,
@@ -133,6 +135,22 @@ pub fn build_rect(jrect: &json::Value) -> (i32, i32, i32, i32) {
     let width = jrect.get("width").unwrap().as_i64().unwrap() as i32;
     let height = jrect.get("height").unwrap().as_i64().unwrap() as i32;
     (x, y, width, height)
+}
+
+#[cfg(feature = "i3-gaps")]
+pub fn build_gaps(props: Option<&json::Value>) -> Option<reply::NodeGaps> {
+    match props {
+        None => None,
+        Some(props) => {
+            let inner = props.get("inner").unwrap().as_i64().unwrap() as i32;
+            let outer = props.get("outer").unwrap().as_i64().unwrap() as i32;
+            let top = props.get("top").unwrap().as_i64().unwrap() as i32;
+            let right = props.get("right").unwrap().as_i64().unwrap() as i32;
+            let bottom = props.get("bottom").unwrap().as_i64().unwrap() as i32;
+            let left = props.get("left").unwrap().as_i64().unwrap() as i32;
+            Some(reply::NodeGaps { inner, outer, top, right, bottom, left })
+        }
+    }
 }
 
 pub fn build_bar_config(j: &json::Value) -> reply::BarConfig {
@@ -198,7 +216,7 @@ pub fn build_bar_config(j: &json::Value) -> reply::BarConfig {
 
 #[cfg(feature = "sway-1-1")]
 pub fn build_modes(j: &json::Value) -> Vec<reply::Mode> {
-    let mut res: Vec<reply::Mode>= Vec::new();
+    let mut res: Vec<reply::Mode> = Vec::new();
     for mode in j.as_array().unwrap() {
         res.push(build_mode(mode))
     }
@@ -213,6 +231,6 @@ pub fn build_mode(jmode: &json::Value) -> reply::Mode {
     reply::Mode {
         width: width,
         height: height,
-        refresh: refresh
+        refresh: refresh,
     }
 }
