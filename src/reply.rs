@@ -123,6 +123,8 @@ pub enum WindowProperty {
     Class,
     WindowRole,
     TransientFor,
+    #[cfg(feature = "i3-4-20")]
+    Machine
 }
 
 #[derive(Eq, PartialEq, Debug, Clone)]

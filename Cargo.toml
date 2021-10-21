@@ -1,6 +1,6 @@
 [package]
 name = "i3ipc"
-version = "0.10.1"
+version = "0.11.0"
 authors = ["Trevor Merrifield <trevorm42@gmail.com>"]
 description = "A library for controlling i3-wm through its IPC interface"
 license = "MIT"
@@ -16,7 +16,8 @@ serde_json = "1.0.32"
 i3-4-12 = []
 i3-4-13 = ["i3-4-12"]
 i3-4-14 = ["i3-4-13"]
-i3-next = ["i3-4-14"]
+i3-4-20 = ["i3-4-14"]
+i3-next = ["i3-4-20"]
 dox = ["i3-next"]
 sway-1-1 = ["i3-next"]
 i3-gaps = []
